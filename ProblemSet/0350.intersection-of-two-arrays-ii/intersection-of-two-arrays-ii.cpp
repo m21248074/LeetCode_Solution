@@ -2,15 +2,15 @@ class Solution {
 public:
     vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
         vector<int> result;
-        vector<int> longer=(nums1.size()>nums2.size())?nums1:nums2;
-        vector<int> shorter=(nums1.size()>nums2.size())?nums2:nums1;
-        for(int i=0;i<shorter.size();i++)
+        map<int,int> m;
+        for(int i=0;i<nums1.size();i++)
+            m[nums1[i]]++;
+        for(int i=0;i<nums2.size();i++)
         {
-            auto it=find(longer.begin(),longer.end(),shorter[i]);
-            if(it!=longer.end()) // find
+            if(m[nums2[i]])
             {
-                longer.erase(it);
-                result.push_back(shorter[i]);
+                m[nums2[i]]--;
+                result.push_back(nums2[i]);
             }
         }
         return result;
