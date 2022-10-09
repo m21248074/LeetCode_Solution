@@ -1,47 +1,37 @@
 class Solution {
 public:
-    int minimizeXor(int a, int b) {
-        int res=0;
-        int setBits=__builtin_popcount(b);
-        stack<int> s;
-        while(a>0)
+    int minimizeXor(int num1, int num2) {
+        if(num1==num2) return num1;
+        int n=__builtin_popcount(num2);
+        int result=0;
+        // for(int i=31;i>=0;i--)
+        // {
+        //     int cur=(num1>>i)&1;
+        //     if(cur&&n>0)
+        //     {
+        //         result|=(1<<i);
+        //         n--;
+        //     }
+        // }
+        for(int i=0;i<32;i++)
         {
-            s.push(a%2);
-            a=a/2;
-        }
-        vector<int> m;
-        while(!s.empty())
-        {
-            if(s.top()==1 && setBits>0)
+            int cur=(num1>>i)&1;
+            if(cur&&n>0)
             {
-                m.push_back(1);
-                setBits--;
-            }
-            else
-                m.push_back(0);
-            s.pop();
-        }
-        for(int i=m.size()-1;i>=0 && setBits>0;i--)
-        {
-            if(m[i]==0)
-            {
-                m[i]=1;
-                setBits--;
+                result|=(1<<i);
+                n--;
             }
         }
-        int mask;
-        for(int i=m.size()-1;i>=0;i--)
+        for(int i=0;i<32;i++)
         {
-            mask=1<<(m.size()-i-1);
-            res+=m[i]*mask;
+            if(!n) break;
+            int cur=(result>>i)&1;
+            if(!cur)
+            {
+                result|=(1<<i);
+                n--;
+            }
         }
-        int n=m.size();
-        while(setBits>0)
-        {
-            res+=1<<n;
-            n++;
-            setBits--;
-        }
-        return res;
+        return result;
     }
 };
