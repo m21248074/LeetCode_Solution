@@ -1,19 +1,18 @@
 class Solution {
 public:
     vector<int> findErrorNums(vector<int>& nums) {
-        int d=0;
-        int m=0;
-        unordered_map<int,int> um;
-        for(int num:nums) um[num]++;
-        for(int i=1;i<=nums.size();i++)
+        int n=nums.size();
+        map<int,int> m;
+        for(int num:nums)
+            m[num]++;
+        vector<int> result(2);
+        for(int i=1;i<=n;i++)
         {
-            if(um[i]==2)
-                d=i;
-            else if(!um[i])
-                m=i;
-            if(d&&m)
-                break;
+            if(!m.count(i))
+                result[1]=i;
+            else if(m[i]==2)
+                result[0]=i;
         }
-        return vector<int>({d,m});
+        return result;
     }
 };
