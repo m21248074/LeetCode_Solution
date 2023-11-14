@@ -1,7 +1,7 @@
 class Solution {
 public:
     int countVowelPermutation(int n) {
-        const long MOD=1000000000+7;
+        const long MOD=1e9+7;
         vector<long> status(5,1);
         for(int i=n;i>1;i--)
         {
