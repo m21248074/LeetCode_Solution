@@ -1,35 +1,45 @@
 class Solution {
 public:
-    int closestMeetingNode(vector<int>& edges, int node1, int node2) {
-        int n=edges.size();
-        vector<int> v1(n,-1);
-        vector<int> v2(n,-1);
-        int temp=node1;
-        v1[node1]=0;
-        v2[node2]=0;
-        while(edges[temp]!=-1&&v1[edges[temp]]==-1)
-        {
-            v1[edges[temp]]=v1[temp]+1;
-            temp=edges[temp];
-        }
-        temp=node2;
-        while(edges[temp]!=-1&&v2[edges[temp]]==-1)
-        {
-            v2[edges[temp]]=v2[temp]+1;
-            temp=edges[temp];
-        }
-        int distance=INT_MAX;
-        int result=0;
-        for(int i=0;i<n;i++)
-        {
-            if(v1[i]==-1||v2[i]==-1) continue;
-            temp=max(v1[i],v2[i]);
-            if(distance>temp)
-            {
-                distance=temp;
-                result=i;
+    void bfs(int startNode, vector<int>& edges, vector<int>& dist) {
+        int n = edges.size();
+        queue<int> q;
+        q.push(startNode);
+
+        vector<bool> visit(n);
+        dist[startNode] = 0;
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+
+            if (visit[node]) {
+                continue;
+            }
+
+            visit[node] = true;
+            int neighbor = edges[node];
+            if (neighbor != -1 && !visit[neighbor]) {
+                dist[neighbor] = 1 + dist[node];
+                q.push(neighbor);
             }
         }
-        return distance==INT_MAX?-1:result;
+    }
+
+    int closestMeetingNode(vector<int>& edges, int node1, int node2) {
+        int n = edges.size();
+        vector<int> dist1(n, numeric_limits<int>::max()), dist2(n, numeric_limits<int>::max());
+
+        bfs(node1, edges, dist1);
+        bfs(node2, edges, dist2);
+
+        int minDistNode = -1, minDistTillNow = numeric_limits<int>::max();
+        for (int currNode = 0; currNode < n; currNode++) {
+            if (minDistTillNow > max(dist1[currNode], dist2[currNode])) {
+                minDistNode = currNode;
+                minDistTillNow = max(dist1[currNode], dist2[currNode]);
+            }
+        }
+
+        return minDistNode;
     }
 };

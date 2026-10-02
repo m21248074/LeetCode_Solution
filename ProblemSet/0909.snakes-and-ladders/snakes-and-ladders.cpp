@@ -1,39 +1,62 @@
 class Solution {
 public:
+    typedef pair<int, int> pii;
+
+    pii getCoord(int blockNo, int n){
+        blockNo--;
+        bool parity = (blockNo / n) & 1;
+        if(parity)
+            return {n - blockNo/n - 1, (blockNo/n + 1)*(n) - blockNo - 1};
+        else
+            return {n - blockNo/n - 1, blockNo - blockNo/n * n};
+    }
+
+    int getBlockNo(int x, int y, int n){
+        bool parity = (x & 1);
+        if(n & 1)
+            parity = parity ^ 1;
+        if(parity)
+            return ((n - x - 1)*n) + y + 1;
+        else
+            return ((n - x - 1)*n) + (n - y - 1) + 1;
+    }
     int snakesAndLadders(vector<vector<int>>& board) {
-        int n=board.size();
-        int result=0;
+        int n = board.size();
+        vector<vector<bool>> vis(n, vector<bool>(n));
+        vis[n-1][0] = true;
         queue<int> q;
         q.push(1);
-        vector<bool> visited(n*n+1);
-        function<int(int)> getPos=[&](int num){
-            int x=(num-1)/n;
-            int y=(num-1)%n;
-            if(x%2==1)
-                y=n-1-y;
-            x=n-1-x;
-            return board[x][y];
-        };
-        while(!q.empty())
-        {
-            int size=q.size();
-            for(int i=0;i<size;i++)
-            {
-                int num=q.front();
+        int level = 0;
+        while(!q.empty()){
+            int qs = q.size();
+            for(int qi = 0;qi<qs;qi++){
+                int u = q.front();
                 q.pop();
-                if(num==n*n) // reach the finish point
-                    return result;
-                for(int j=1;j<=6 && num+j<=n*n;j++)
-                {
-                    int next=getPos(num+j);
-                    if(next==-1) next=num+j;
-                    if(visited[next])
-                        continue;
-                    visited[next]=true;
-                    q.push(next);
+                if(u == n*n)
+                    return level;
+                pii coord = getCoord(u, n);
+                int x = coord.first, y = coord.second;
+                for(int i = 1;i<=6;i++){
+                    int v = u + i;
+                    if(v > n*n)
+                        break;
+                    pii newCoord = getCoord(v, n);
+                    int nx = newCoord.first, ny = newCoord.second;
+                    if(board[nx][ny] != -1){
+                        if(getBlockNo(nx ,ny, n) == n*n){
+                            q.push(n*n);
+                            continue;
+                        }
+                        newCoord = getCoord(board[nx][ny], n);
+                        nx = newCoord.first, ny = newCoord.second;
+                    }
+                    if(!vis[nx][ny]){
+                        q.push(getBlockNo(nx, ny, n));
+                        vis[nx][ny] = true;
+                    }
                 }
             }
-            result++;
+            level++;
         }
         return -1;
     }

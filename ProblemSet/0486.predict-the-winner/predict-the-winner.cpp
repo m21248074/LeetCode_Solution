@@ -1,6 +1,6 @@
 class Solution {
 public:
-    bool PredictTheWinner(vector<int>& nums) {
+    bool predictTheWinner(vector<int>& nums) {
         int n=nums.size();
         vector<vector<int>> dp(n,vector<int>(n));
         for(int i=0;i<n;i++)

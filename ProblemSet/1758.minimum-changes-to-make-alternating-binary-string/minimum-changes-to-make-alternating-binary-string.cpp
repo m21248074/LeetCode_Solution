@@ -1,21 +1,25 @@
 class Solution {
 public:
     int minOperations(string s) {
-        int n=s.length();
-        int start1=0;
-        int start0=0;
-        int temp1=1;
-        int temp0=0;
-        for(char c:s)
-        {
-            int digit=c-'0';
-            if(digit!=temp1)
-                start1++;
-            if(digit!=temp0)
-                start0++;
-            temp1^=1;
-            temp0^=1;
+        int start0 = 0;
+        int start1 = 0;
+        
+        for (int i = 0; i < s.size(); i++) {
+            if (i % 2 == 0) {
+                if (s[i] == '0') {
+                    start1++;
+                } else {
+                    start0++;
+                }
+            } else {
+                if (s[i] == '1') {
+                    start1++;
+                } else {
+                    start0++;
+                }
+            }
         }
-        return min(start1,start0);
+        
+        return min(start0, start1);
     }
 };

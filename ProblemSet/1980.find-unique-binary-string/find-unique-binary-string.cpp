@@ -21,6 +21,6 @@ public:
             if(!us.count(s))
                 return s;
         }
-        return nullptr;
+        return "";
     }
 };
